@@ -1,7 +1,7 @@
 from tkinter import *
 from random import randint, shuffle
 
-# ----- variables globales --------------------------------------------------------
+# Variables Globales
 images = []  # contient les liens aux fichiers images
 cartes = []  # contient le lien vers l'image des différentes cartes
 cartes_jouees = []  # contient les cartes jouées
@@ -13,34 +13,42 @@ fini = False
 peut_jouer = True
 
 
-# ----- Images --------------------------------------------------------------------
 def charger_images():
+    """
+    Charge les images
+    :return:
+    """
     del images[:]  # vide la liste
     nb_images = 21  # l'image no 0 est le dos des cartes
-    choixCartes = []
-    choixCartes.append(0)
+    choix_cartes = [0]
     i = 0
     while i < nb_images - 1:  # tirage au sort des cartes à utiliser
         x = randint(1, nb_images - 1)
-        if x not in choixCartes:
-            choixCartes.append(x)
+        if x not in choix_cartes:
+            choix_cartes.append(x)
             i += 1
     for i in range(nb_images):  # importation des images
-        nom = 'img\image' + str(choixCartes[i]) + '.png'
+        nom = 'img\image' + str(choix_cartes[i]) + '.png'
         image = PhotoImage(file=nom)
         images.append(image)
 
 
-# ----- Melange des cartes -----------------------------------------------------
 def melanger_cartes():
+    """
+    Mélange les cartes
+    :return:
+    """
     global nb_colonnes, nb_lignes, cartes
     nb_cartes = nb_colonnes * nb_lignes
     cartes = list(range(1, nb_cartes // 2 + 1)) * 2
     shuffle(cartes)
 
 
-# ----- Retourne les deux cartes à la fin de la sélection ----------------------
 def gerer_tirage():
+    """
+    Retourne les deux cartes à la fin de la sélection
+    :return:
+    """
     global nb_colonnes, nb_lignes, cartes_jouees
     global joueur_actuel, fini, peut_jouer
     if cartes[cartes_jouees[0] - 1] == cartes[cartes_jouees[1] - 1]:
@@ -77,49 +85,68 @@ def gerer_tirage():
         canvas.create_text((55 * nb_colonnes) + 10, (55 * nb_lignes) + 10, text=texte, font='Calibri 24', fill='black')
 
 
-# ----- Retourne la carte sélectionnée -------------------------------------------
 def cliquer_carte(event):
+    """
+    Retourne la carte sélectionnée
+    :param event:
+    :return:
+    """
     global fini, fenetre, cartes_jouees, peut_jouer
     if len(cartes_jouees) < 2:
-        carteSel = canvas.find_closest(event.x, event.y)
-        carteID = carteSel[0]
+        carte_selection = canvas.find_closest(event.x, event.y)
+        carte_id = carte_selection[0]
         if fini:
             fini = False
             reinit()
         else:
-            canvas.itemconfig(carteID, image=images[cartes[carteID - 1]])
+            canvas.itemconfig(carte_id, image=images[cartes[carte_id - 1]])
             if len(cartes_jouees) == 0:
-                cartes_jouees.append(carteID)  # enregistre la carte jouée
-            elif carteID != cartes_jouees[0]:  # ne pas cliquer 2x sur la même carte
-                cartes_jouees.append(carteID)
+                cartes_jouees.append(carte_id)  # enregistre la carte jouée
+            elif carte_id != cartes_jouees[0]:  # ne pas cliquer 2x sur la même carte
+                cartes_jouees.append(carte_id)
     if peut_jouer and len(cartes_jouees) == 2:
         peut_jouer = False  # désactive l'effet du clic de la souris
         fenetre.after(1500, gerer_tirage)  # patiente 1,5 secondes
 
 
-# ----- Change la taille du fenetre de jeu --------------------------------------
 def jeu4x4():
+    """
+    Le jeu passe en 4x4
+    :return:
+    """
     global nb_colonnes
     nb_colonnes = 4
     reinit()
 
 
 def jeu4x6():
+    """
+    Le jeu passe en 4x6
+    :return:
+    """
     global nb_colonnes
     nb_colonnes = 6
     reinit()
 
 
 def jeu4x8():
+    """
+    Le jeu passe en 4x8
+    :return:
+    """
     global nb_colonnes
     nb_colonnes = 8
     reinit()
 
 
-# ----- création des menus et sous-menus ------------------------------------------
-def creer_menus(fen):
-    top = Menu(fen)
-    fen.config(menu=top)
+def creer_menus(fenetre):
+    """
+    création des menus et sous-menus
+    :param fenetre:
+    :return:
+    """
+    top = Menu(fenetre)
+    fenetre.config(menu=top)
     jeu = Menu(top, tearoff=False)
     top.add_cascade(label='Jeu', menu=jeu)
     jeu.add_command(label='Nouvelle partie', command=reinit)
@@ -128,17 +155,25 @@ def creer_menus(fen):
     submenu.add_command(label='4 x 4', command=jeu4x4)
     submenu.add_command(label='4 x 6', command=jeu4x6)
     submenu.add_command(label='4 x 8', command=jeu4x8)
-    jeu.add_command(label='Quitter', command=fen.destroy)
+    jeu.add_command(label='Quitter', command=fenetre.destroy)
 
 
-# ----- Création du canvas --------------------------------------------------------
 def creer_canevas(fen, col, lig):
+    """
+    Création du canvas
+    :param fen:
+    :param col:
+    :param lig:
+    :return:
+    """
     return Canvas(fen, width=(155 * col) + 10, height=(205 * lig) + 10, bg='white')
 
 
-# ----- Modifier le canvas --------------------------------------------------------
-# Redémarre une partie et change éventuellement la difficulté
 def reinit():
+    """
+    Redémarre une partie et change éventuellement la difficulté
+    :return:
+    """
     global canvas, joueur_actuel, score, nb_lignes, nb_colonnes
     joueur_actuel = 0
     score = [0, 0]
@@ -158,25 +193,30 @@ def reinit():
     points_joueur2.config(text=text2, bg='white')
 
 
-# ----- Programme principal -------------------------------------------------------
+# Programme principal
 fenetre = Tk()
 fenetre.title("Memory")
 fenetre.geometry("1920x1080")
-creer_menus(fenetre)
-# création du canvas dont la taille dépend du nombre de cartes
-# fenetre = Frame(fenetre)
 
-# fenetre.pack()
+creer_menus(fenetre)
+
+# Création du canvas dont la taille dépend du nombre de cartes
 canvas = creer_canevas(fenetre, nb_colonnes, nb_lignes)
 canvas.pack(side=TOP, padx=2, pady=2)
+
 points_joueur1 = Label(fenetre, text="Joueur 1 : 0", bg="orange", font="Helvetica 16")
 points_joueur1.pack(pady=2, side=LEFT)
+
 points_joueur2 = Label(fenetre, text="Joueur 2 : 0", font="Helvetica 16")
 points_joueur2.pack(pady=2, side=RIGHT)
+
 charger_images()
 melanger_cartes()
+
 for i in range(nb_colonnes):  # dessin des cartes retournées
     for j in range(nb_lignes):
         canvas.create_image((155 * i) + 60, (205 * j) + 60, image=images[0])
+
 canvas.bind("<Button-1>", cliquer_carte)  # permet le clic sur les cartes
+
 fenetre.mainloop()
