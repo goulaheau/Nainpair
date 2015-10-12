@@ -2,13 +2,13 @@ from tkinter import *
 from random import randint, shuffle
 
 # ----- variables globales --------------------------------------------------------
-images = [] # contient les liens aux fichiers images
-cartes = [] # contient le lien vers l'image des différentes cartes
-cartes_jouees = [] # contient les cartes jouées
-nb_lignes, nb_colonnes =  4, 4
+images = []  # contient les liens aux fichiers images
+cartes = []  # contient le lien vers l'image des différentes cartes
+cartes_jouees = []  # contient les cartes jouées
+nb_lignes, nb_colonnes = 4, 4
 choixCartes = []
 joueur_actuel = 0
-score = [0,0]
+score = [0, 0]
 fini = False
 peut_jouer = True
 
@@ -103,10 +103,12 @@ def jeu4x4():
     nb_colonnes = 4
     reinit()
 
+
 def jeu4x6():
     global nb_colonnes
     nb_colonnes = 6
     reinit()
+
 
 def jeu4x8():
     global nb_colonnes
@@ -162,9 +164,9 @@ fenetre.title("Memory")
 fenetre.geometry("1920x1080")
 creer_menus(fenetre)
 # création du canvas dont la taille dépend du nombre de cartes
-#fenetre = Frame(fenetre)
+# fenetre = Frame(fenetre)
 
-#fenetre.pack()
+# fenetre.pack()
 canvas = creer_canevas(fenetre, nb_colonnes, nb_lignes)
 canvas.pack(side=TOP, padx=2, pady=2)
 points_joueur1 = Label(fenetre, text="Joueur 1 : 0", bg="orange", font="Helvetica 16")
