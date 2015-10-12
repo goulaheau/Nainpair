@@ -1,13 +1,14 @@
-# Memory pour 2 joueurs humains
 from tkinter import *
 from random import randint, shuffle
+
 # ----- variables globales --------------------------------------------------------
-images = []  # contient les liens aux fichiers images
-cartes = []  # contient le lien vers l'image des différentes cartes
-cartes_jouees = []  # contient les cartes jouées
-nb_lignes, nb_colonnes = 5, 4
+images = [] # contient les liens aux fichiers images
+cartes = [] # contient le lien vers l'image des différentes cartes
+cartes_jouees = [] # contient les cartes jouées
+nb_lignes, nb_colonnes =  4, 4
+choixCartes = []
 joueur_actuel = 0
-score = [0, 0]
+score = [0,0]
 fini = False
 peut_jouer = True
 
@@ -78,7 +79,7 @@ def gerer_tirage():
 
 # ----- Retourne la carte sélectionnée -------------------------------------------
 def cliquer_carte(event):
-    global fini, plateau, cartes_jouees, peut_jouer
+    global fini, fenetre, cartes_jouees, peut_jouer
     if len(cartes_jouees) < 2:
         carteSel = canvas.find_closest(event.x, event.y)
         carteID = carteSel[0]
@@ -93,23 +94,21 @@ def cliquer_carte(event):
                 cartes_jouees.append(carteID)
     if peut_jouer and len(cartes_jouees) == 2:
         peut_jouer = False  # désactive l'effet du clic de la souris
-        plateau.after(1500, gerer_tirage)  # patiente 1,5 secondes
+        fenetre.after(1500, gerer_tirage)  # patiente 1,5 secondes
 
 
-# ----- Change la taille du plateau de jeu --------------------------------------
-def jeu5x4():
+# ----- Change la taille du fenetre de jeu --------------------------------------
+def jeu4x4():
     global nb_colonnes
     nb_colonnes = 4
     reinit()
 
-
-def jeu5x6():
+def jeu4x6():
     global nb_colonnes
     nb_colonnes = 6
     reinit()
 
-
-def jeu5x8():
+def jeu4x8():
     global nb_colonnes
     nb_colonnes = 8
     reinit()
@@ -124,9 +123,9 @@ def creer_menus(fen):
     jeu.add_command(label='Nouvelle partie', command=reinit)
     submenu = Menu(jeu, tearoff=False)
     jeu.add_cascade(label='Dimensions', menu=submenu)
-    submenu.add_command(label='5 x 4', command=jeu5x4)
-    submenu.add_command(label='5 x 6', command=jeu5x6)
-    submenu.add_command(label='5 x 8', command=jeu5x8)
+    submenu.add_command(label='4 x 4', command=jeu4x4)
+    submenu.add_command(label='4 x 6', command=jeu4x6)
+    submenu.add_command(label='4 x 8', command=jeu4x8)
     jeu.add_command(label='Quitter', command=fen.destroy)
 
 
@@ -144,7 +143,7 @@ def reinit():
     del cartes[:]
     del cartes_jouees[:]
     canvas.destroy()
-    canvas = creer_canevas(plateau, nb_colonnes, nb_lignes)
+    canvas = creer_canevas(fenetre, nb_colonnes, nb_lignes)
     canvas.pack(side=TOP, padx=5, pady=5)
     canvas.bind("<Button-1>", cliquer_carte)  # permet le clic sur les cartes
     melanger_cartes()
@@ -160,12 +159,13 @@ def reinit():
 # ----- Programme principal -------------------------------------------------------
 fenetre = Tk()
 fenetre.title("Memory")
+fenetre.geometry("1920x1080")
 creer_menus(fenetre)
 # création du canvas dont la taille dépend du nombre de cartes
-plateau = Frame(fenetre)
+#fenetre = Frame(fenetre)
 
-plateau.pack()
-canvas = creer_canevas(plateau, nb_colonnes, nb_lignes)
+#fenetre.pack()
+canvas = creer_canevas(fenetre, nb_colonnes, nb_lignes)
 canvas.pack(side=TOP, padx=2, pady=2)
 points_joueur1 = Label(fenetre, text="Joueur 1 : 0", bg="orange", font="Helvetica 16")
 points_joueur1.pack(pady=2, side=LEFT)
