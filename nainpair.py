@@ -141,7 +141,7 @@ def jeu4x8():
 
 def creer_menus(fenetre):
     """
-    création des menus et sous-menus
+    Création des menus et sous-menus
     :param fenetre:
     :return:
     """
