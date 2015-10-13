@@ -1,6 +1,7 @@
 __author__ = 'vincs'
 
 from tkinter import *
+from tkinter.filedialog import *
 
 #Main Frame
 fenetre = Tk()
@@ -34,7 +35,6 @@ def new_frame():
 
  #Place of frames
     frame_players.place(x=350, y=100)
-   # frame_Menu.place(x=350,y=100)
 
  #Buttons 1Player 2Player Quit
 
@@ -42,14 +42,28 @@ def new_frame():
     two_players.pack(padx = 25, pady = 25)
     back_menu.pack(padx = 25, pady = 25,)
 
-def rules():
-    global frame_rules, back_menu_rules
+# opening text file
+global rulestext, content, regles
 
-    frame_rules = Frame(fenetre, borderwith=4, relief=GROOVE, width=700, height=500)
+regles = open('regles/regles.txt', "r")
+content = regles.read()
+
+regles.close()
+
+
+
+def rules():
+    global frame_rules, back_menu_rules, text_rules
+
+
+    frame_rules = Frame(fenetre,borderwidth=4, relief=GROOVE, width=500, height=250)
     frame_rules.pack()
-    back_menu_rules = Button(frame_rules, text='Back to menu', font=("Arial",50),fg="#a1dbcd", bg="#383a39", command=fermer_rules)
-    back_menu_rules.pack(padx = 25, pady = 25)
-    text_rules = Label(frame_rules, text = '', font=('Arial', 50, fg="#a1dbcd", bg="#383a39"))
+    back_menu_rules = Button(frame_rules, text='Back to menu', font=("Arial",23),fg="#a1dbcd", bg="#383a39", command=fermer_rules)
+    back_menu_rules.pack(padx = 25, pady = 25, side=BOTTOM)
+    text_rules = Label(frame_rules, text = content, font=("Arial", 35))
+    text_rules.pack()
+    frame_rules.place(x=350,y=100)
+
 
 
 
@@ -60,9 +74,14 @@ def fermer():
     back_menu.pack_forget()
     frame_players.destroy()
 
-#def fermer_rules():
- #   frame_Menu.pack_forget()
-  #  frame_Menu.destroy()
+
+def fermer_rules():
+
+
+    frame_rules.pack_forget()
+    back_menu_rules.pack_forget()
+    text_rules.pack_forget()
+    frame_rules.destroy()
 
 def Quit():
     fenetre.destroy()
@@ -82,7 +101,7 @@ frame_Nain.pack(side= LEFT, padx = 100, pady = 100)
 play= Button(frame_Menu, text ='Play',font=("Arial",50),fg="#a1dbcd", bg="#383a39", command=new_frame)
 play.pack( padx = 50, pady = 10,)
 
-rules= Button(frame_Menu, text='Rules',font=("Arial",50),fg="#a1dbcd", bg="#383a39")
+rules= Button(frame_Menu, text='Rules',font=("Arial",50),fg="#a1dbcd", bg="#383a39", command=rules)
 rules.pack(padx = 25, pady = 25)
 
 scores= Button(frame_Menu, text='Scores',font=("Arial",50),fg="#a1dbcd", bg="#383a39")
