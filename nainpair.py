@@ -196,7 +196,10 @@ def reinit():
 # Programme principal
 fenetre = Tk()
 fenetre.title("Nainpair")
-fenetre.geometry("1920x1080")
+w, h = fenetre.winfo_screenwidth(), fenetre.winfo_screenheight()
+fenetre.overrideredirect(1)
+fenetre.geometry("%dx%d+0+0" % (w, h))
+creer_menus(fenetre)
 
 creer_menus(fenetre)
 
