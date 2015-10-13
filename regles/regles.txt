@@ -1,0 +1,5 @@
+Le jeu se compose de paires d’images portant des illustrations identiques. 
+L’ensemble des images est mélangé, puis étalé face cachée. 
+Si le joueur découvre deux images identiques, elles disparaissent et le joueur rejoue. 
+Si les images ne sont pas identiques, les cartes retournent faces cachées à leur emplacement de départ. 
+Le jeu se termine quand toutes les paires d’images ont été découvertes et ramassées.
