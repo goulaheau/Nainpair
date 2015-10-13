@@ -6,7 +6,7 @@ images = []  # contient les liens aux fichiers images
 cartes = []  # contient le lien vers l'image des différentes cartes
 cartes_jouees = []  # contient les cartes jouées
 nb_lignes, nb_colonnes = 4, 4
-choixCartes = []
+choix_cartes = []
 joueur_actuel = 0
 score = [0, 0]
 fini = False
@@ -195,7 +195,7 @@ def reinit():
 
 # Programme principal
 fenetre = Tk()
-fenetre.title("Memory")
+fenetre.title("Nainpair")
 fenetre.geometry("1920x1080")
 
 creer_menus(fenetre)
