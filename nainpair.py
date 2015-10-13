@@ -1,6 +1,68 @@
 from tkinter import *
 from random import randint, shuffle
 
+# Programme principal
+fenetre = Tk()
+fenetre.title("Nainpair")
+fenetre.geometry('1200x800')
+fenetre.configure(background="#a1dbcd")
+
+
+# Menu
+def new_frame():
+    global frame_players, one_player, two_players, back_menu
+
+    frame_players = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
+    one_player = Button(frame_players, text='1 Nain', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=deux_joueurs)
+    two_players = Button(frame_players, text='2 Nains', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=deux_joueurs)
+    back_menu = Button(frame_players, text='Back to menu', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=fermer)
+
+    frame_players.pack(padx=50, pady=50)
+    frame_players.place(x=350, y=100)
+    one_player.pack(padx=50, pady=10, )
+    two_players.pack(padx=25, pady=25)
+    back_menu.pack(padx=25, pady=25, )
+
+
+def rules():
+    global frame_rules, back_menu_rules, text_rules, content, regles
+
+    regles = open('regles/regles.txt', "r")
+    content = regles.read()
+    regles.close()
+
+    frame_rules = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
+    frame_rules.pack()
+    frame_rules.place(x=150, y=100)
+
+    back_menu_rules = Button(frame_rules, text='Back to menu', font=("Arial", 23), fg="#a1dbcd", bg="#383a39", command=fermer_rules)
+    back_menu_rules.pack(padx=25, pady=25, side=BOTTOM)
+
+    text_rules = Label(frame_rules, text=content, font=("Arial", 20))
+    text_rules.pack()
+
+
+def fermer():
+    frame_players.pack_forget()
+    one_player.pack_forget()
+    two_players.pack_forget()
+    back_menu.pack_forget()
+    frame_players.destroy()
+
+
+def fermer_rules():
+    frame_rules.pack_forget()
+    back_menu_rules.pack_forget()
+    text_rules.pack_forget()
+    frame_rules.destroy()
+
+
+def quitter():
+    fenetre.destroy()
+
+
+# Jeu
+
 # Variables Globales
 images = []  # contient les liens aux fichiers images
 cartes = []  # contient le lien vers l'image des différentes cartes
@@ -11,6 +73,39 @@ joueur_actuel = 0
 score = [0, 0]
 fini = False
 peut_jouer = True
+
+
+def deux_joueurs():
+    global points_joueur1, points_joueur2, canvas
+
+    # Fermeture du menu
+    frame_Menu.pack_forget()
+    frame_Nain.pack_forget()
+    play.pack_forget()
+    rules.pack_forget()
+    scores.pack_forget()
+    quitter.pack_forget()
+    frame_Menu.destroy()
+    fermer()
+
+    # Création du canvas dont la taille dépend du nombre de cartes
+    canvas = creer_canevas(fenetre, nb_colonnes, nb_lignes)
+    canvas.pack(side=TOP, padx=2, pady=2)
+
+    points_joueur1 = Label(fenetre, text="Joueur 1 : 0", bg="orange", font="Helvetica 16")
+    points_joueur1.pack(pady=2, side=LEFT)
+
+    points_joueur2 = Label(fenetre, text="Joueur 2 : 0", font="Helvetica 16")
+    points_joueur2.pack(pady=2, side=RIGHT)
+
+    charger_images()
+    melanger_cartes()
+
+    for i in range(nb_colonnes):  # dessin des cartes retournées
+        for j in range(nb_lignes):
+            canvas.create_image((155 * i) + 60, (205 * j) + 60, image=images[0])
+
+    canvas.bind("<Button-1>", cliquer_carte)  # permet le clic sur les cartes
 
 
 def charger_images():
@@ -193,33 +288,26 @@ def reinit():
     points_joueur2.config(text=text2, bg='white')
 
 
-# Programme principal
-fenetre = Tk()
-fenetre.title("Nainpair")
-w, h = fenetre.winfo_screenwidth(), fenetre.winfo_screenheight()
-fenetre.overrideredirect(1)
-fenetre.geometry("%dx%d+0+0" % (w, h))
-creer_menus(fenetre)
+# Frame Menu Buttons
+frame_Menu = Frame(fenetre, borderwidth=2, relief=GROOVE, width=50, height=500)
+frame_Menu.pack()
+
+frame_Nain = Frame(fenetre, width=100, height=300)
+frame_Nain.pack(side=LEFT, padx=100, pady=100)
+
+# Menu's Buttons
+play = Button(frame_Menu, text='Play', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=new_frame)
+play.pack(padx=50, pady=10, )
+
+rules = Button(frame_Menu, text='Rules', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=rules)
+rules.pack(padx=25, pady=25)
+
+scores = Button(frame_Menu, text='Scores', font=("Arial", 50), fg="#a1dbcd", bg="#383a39")
+scores.pack(padx=25, pady=25, )
+
+quitter = Button(frame_Menu, text='Quit', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=quitter)
+quitter.pack(padx=25, pady=25, )
 
 creer_menus(fenetre)
-
-# Création du canvas dont la taille dépend du nombre de cartes
-canvas = creer_canevas(fenetre, nb_colonnes, nb_lignes)
-canvas.pack(side=TOP, padx=2, pady=2)
-
-points_joueur1 = Label(fenetre, text="Joueur 1 : 0", bg="orange", font="Helvetica 16")
-points_joueur1.pack(pady=2, side=LEFT)
-
-points_joueur2 = Label(fenetre, text="Joueur 2 : 0", font="Helvetica 16")
-points_joueur2.pack(pady=2, side=RIGHT)
-
-charger_images()
-melanger_cartes()
-
-for i in range(nb_colonnes):  # dessin des cartes retournées
-    for j in range(nb_lignes):
-        canvas.create_image((155 * i) + 60, (205 * j) + 60, image=images[0])
-
-canvas.bind("<Button-1>", cliquer_carte)  # permet le clic sur les cartes
 
 fenetre.mainloop()
