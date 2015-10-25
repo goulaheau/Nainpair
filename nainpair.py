@@ -15,13 +15,13 @@ def new_frame():
     frame_players = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
     one_player = Button(frame_players, text='1 Nain', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=deux_joueurs)
     two_players = Button(frame_players, text='2 Nains', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=deux_joueurs)
-    back_menu = Button(frame_players, text='Back to menu', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=fermer)
+    back_menu = Button(frame_players, text='Back to menu', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=fermer_play)
 
     frame_players.pack(padx=50, pady=50)
     frame_players.place(x=350, y=100)
-    one_player.pack(padx=50, pady=10, )
+    one_player.pack(padx=50, pady=10)
     two_players.pack(padx=25, pady=25)
-    back_menu.pack(padx=25, pady=25, )
+    back_menu.pack(padx=25, pady=25)
 
 
 def rules():
@@ -42,7 +42,7 @@ def rules():
     text_rules.pack()
 
 
-def fermer():
+def fermer_play():
     frame_players.pack_forget()
     one_player.pack_forget()
     two_players.pack_forget()
@@ -55,6 +55,24 @@ def fermer_rules():
     back_menu_rules.pack_forget()
     text_rules.pack_forget()
     frame_rules.destroy()
+
+
+def fermer_difficulte():
+    frame_difficulty.pack_forget()
+    facile.pack_forget()
+    moyen.pack_forget()
+    difficile.pack_forget()
+    frame_difficulty.destroy()
+
+
+def fermer_menu():
+    frame_Menu.pack_forget()
+    frame_Nain.pack_forget()
+    play.pack_forget()
+    rules.pack_forget()
+    scores.pack_forget()
+    quitter.pack_forget()
+    frame_Menu.destroy()
 
 
 def quitter():
@@ -76,25 +94,33 @@ peut_jouer = True
 
 
 def deux_joueurs():
+    global frame_difficulty, facile, moyen, difficile
+
+    # Fermeture du menu d'avant
+    fermer_play()
+    # Ouverture du menu de difficulté
+    frame_difficulty = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
+    facile = Button(frame_difficulty, text='Facile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: difficulte(4))
+    moyen = Button(frame_difficulty, text='Moyen', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: difficulte(6))
+    difficile = Button(frame_difficulty, text='Difficile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: difficulte(8))
+
+    frame_difficulty.pack(padx=50, pady=50)
+    frame_difficulty.place(x=350, y=100)
+    facile.pack(padx=50, pady=10)
+    moyen.pack(padx=25, pady=25)
+    difficile.pack(padx=25, pady=25)
+
+
+def difficulte(nb_colonnes):
+    fermer_menu()
+
+    # Initilisation du jeu
     global points_joueur1, points_joueur2, canvas
-
-    # Fermeture du menu
-    frame_Menu.pack_forget()
-    frame_Nain.pack_forget()
-    play.pack_forget()
-    rules.pack_forget()
-    scores.pack_forget()
-    quitter.pack_forget()
-    frame_Menu.destroy()
-    fermer()
-
     # Création du canvas dont la taille dépend du nombre de cartes
     canvas = creer_canevas(fenetre, nb_colonnes, nb_lignes)
     canvas.pack(side=TOP, padx=2, pady=2)
-
     points_joueur1 = Label(fenetre, text="Joueur 1 : 0", bg="orange", font="Helvetica 16")
     points_joueur1.pack(pady=2, side=LEFT)
-
     points_joueur2 = Label(fenetre, text="Joueur 2 : 0", font="Helvetica 16")
     points_joueur2.pack(pady=2, side=RIGHT)
 
@@ -106,6 +132,17 @@ def deux_joueurs():
             canvas.create_image((155 * i) + 60, (205 * j) + 60, image=images[0])
 
     canvas.bind("<Button-1>", cliquer_carte)  # permet le clic sur les cartes
+
+    # Solutionne le problème d'affichage des scores
+    reinit()
+    if nb_colonnes == 4:
+        jeu4x4()
+    if nb_colonnes == 6:
+        jeu4x6()
+    if nb_colonnes == 8:
+        jeu4x8()
+
+    fermer_difficulte()
 
 
 def charger_images():
@@ -157,8 +194,8 @@ def gerer_tirage():
         canvas.itemconfig(cartes_jouees[1], image=images[0])
         joueur_actuel = (joueur_actuel + 1) % 2  # la main passe à l'autre joueur
     cartes_jouees = []
-    text1 = 'Joueur 1 : ' + str(score[0] * 2)
-    text2 = 'Joueur 2 : ' + str(score[1] * 2)
+    text1 = 'Joueur 1 : ' + str(score[0])
+    text2 = 'Joueur 2 : ' + str(score[1])
     points_joueur1.config(text=text1)
     points_joueur2.config(text=text2)
     peut_jouer = True  # réactive l'effet du clic de la souris
