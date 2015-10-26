@@ -10,6 +10,10 @@ fenetre.configure(background="#a1dbcd")
 
 # Menu
 def new_frame():
+    """
+    Création du menu
+    :return:
+    """
     global frame_players, one_player, two_players, back_menu
 
     frame_players = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
@@ -25,6 +29,10 @@ def new_frame():
 
 
 def rules():
+    """
+    Affiche les règles
+    :return:
+    """
     global frame_rules, back_menu_rules, text_rules, content, regles
 
     regles = open('regles/regles.txt', "r")
@@ -43,6 +51,10 @@ def rules():
 
 
 def fermer_play():
+    """
+    Ferme le menu Play
+    :return:
+    """
     frame_players.pack_forget()
     one_player.pack_forget()
     two_players.pack_forget()
@@ -51,6 +63,10 @@ def fermer_play():
 
 
 def fermer_rules():
+    """
+    Ferme le menu Rules
+    :return:
+    """
     frame_rules.pack_forget()
     back_menu_rules.pack_forget()
     text_rules.pack_forget()
@@ -58,6 +74,10 @@ def fermer_rules():
 
 
 def fermer_difficulte():
+    """
+    Ferme le menu Difficulté
+    :return:
+    """
     frame_difficulty.pack_forget()
     facile.pack_forget()
     moyen.pack_forget()
@@ -66,6 +86,10 @@ def fermer_difficulte():
 
 
 def fermer_menu():
+    """
+    Ferme le Menu
+    :return:
+    """
     frame_Menu.pack_forget()
     frame_Nain.pack_forget()
     play.pack_forget()
@@ -76,6 +100,10 @@ def fermer_menu():
 
 
 def quitter():
+    """
+    Ferme le programme
+    :return:
+    """
     fenetre.destroy()
 
 
@@ -102,6 +130,7 @@ def un_joueur():
 
     # Fermeture du menu d'avant
     fermer_play()
+
     # Ouverture du menu de difficulté
     frame_difficulty = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
     facile = Button(frame_difficulty, text='Facile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: difficulte_un_joueur(4))
@@ -162,6 +191,7 @@ def deux_joueurs():
 
     # Fermeture du menu d'avant
     fermer_play()
+
     # Ouverture du menu de difficulté
     frame_difficulty = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
     facile = Button(frame_difficulty, text='Facile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: difficulte_deux_joueurs(4))
