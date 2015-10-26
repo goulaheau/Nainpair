@@ -1,7 +1,7 @@
 from tkinter import *
 from random import randint, shuffle
 
-# Programme principal
+# Configuration de la fenêtre
 fenetre = Tk()
 fenetre.title("Nainpair")
 fenetre.geometry('1200x800')
@@ -13,7 +13,7 @@ def new_frame():
     global frame_players, one_player, two_players, back_menu
 
     frame_players = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
-    one_player = Button(frame_players, text='1 Nain', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=deux_joueurs)
+    one_player = Button(frame_players, text='1 Nain', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=un_joueur)
     two_players = Button(frame_players, text='2 Nains', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=deux_joueurs)
     back_menu = Button(frame_players, text='Back to menu', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=fermer_play)
 
@@ -93,16 +93,20 @@ fini = False
 peut_jouer = True
 
 
-def deux_joueurs():
+def un_joueur():
+    """
+    Lance la partie pour 2 joueurs
+    :return:
+    """
     global frame_difficulty, facile, moyen, difficile
 
     # Fermeture du menu d'avant
     fermer_play()
     # Ouverture du menu de difficulté
     frame_difficulty = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
-    facile = Button(frame_difficulty, text='Facile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: difficulte(4))
-    moyen = Button(frame_difficulty, text='Moyen', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: difficulte(6))
-    difficile = Button(frame_difficulty, text='Difficile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: difficulte(8))
+    facile = Button(frame_difficulty, text='Facile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: difficulte_un_joueur(4))
+    moyen = Button(frame_difficulty, text='Moyen', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: difficulte_un_joueur(6))
+    difficile = Button(frame_difficulty, text='Difficile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: difficulte_un_joueur(8))
 
     frame_difficulty.pack(padx=50, pady=50)
     frame_difficulty.place(x=350, y=100)
@@ -111,7 +115,72 @@ def deux_joueurs():
     difficile.pack(padx=25, pady=25)
 
 
-def difficulte(nb_colonnes):
+def difficulte_un_joueur(nb_colonnes):
+    """
+    Affiche le menu permettant de choisir la difficulté pour 2 joueurs
+    :param nb_colonnes:
+    :return:
+    """
+    fermer_menu()
+
+    # Initilisation du jeu
+    global points_joueur1, points_joueur2, canvas
+    # Création du canvas dont la taille dépend du nombre de cartes
+    canvas = creer_canevas(fenetre, nb_colonnes, nb_lignes)
+    canvas.pack(side=TOP, padx=2, pady=2)
+    # On ne pack pas les points_joueurs car on a seulement un joueur
+    points_joueur1 = Label(fenetre, text="Joueur 1 : 0", bg="orange", font="Helvetica 16")
+    points_joueur2 = Label(fenetre, text="Joueur 2 : 0", font="Helvetica 16")
+
+    charger_images()
+    melanger_cartes()
+
+    for i in range(nb_colonnes):  # dessin des cartes retournées
+        for j in range(nb_lignes):
+            canvas.create_image((155 * i) + 60, (205 * j) + 60, image=images[0])
+
+    canvas.bind("<Button-1>", cliquer_carte)  # permet le clic sur les cartes
+
+    # Solutionne le problème d'affichage des scores
+    reinit()
+    if nb_colonnes == 4:
+        jeu4x4()
+    if nb_colonnes == 6:
+        jeu4x6()
+    if nb_colonnes == 8:
+        jeu4x8()
+
+    fermer_difficulte()
+
+
+def deux_joueurs():
+    """
+    Lance la partie pour 2 joueurs
+    :return:
+    """
+    global frame_difficulty, facile, moyen, difficile
+
+    # Fermeture du menu d'avant
+    fermer_play()
+    # Ouverture du menu de difficulté
+    frame_difficulty = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
+    facile = Button(frame_difficulty, text='Facile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: difficulte_deux_joueurs(4))
+    moyen = Button(frame_difficulty, text='Moyen', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: difficulte_deux_joueurs(6))
+    difficile = Button(frame_difficulty, text='Difficile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: difficulte_deux_joueurs(8))
+
+    frame_difficulty.pack(padx=50, pady=50)
+    frame_difficulty.place(x=350, y=100)
+    facile.pack(padx=50, pady=10)
+    moyen.pack(padx=25, pady=25)
+    difficile.pack(padx=25, pady=25)
+
+
+def difficulte_deux_joueurs(nb_colonnes):
+    """
+    Affiche le menu permettant de choisir la difficulté pour 2 joueurs
+    :param nb_colonnes:
+    :return:
+    """
     fermer_menu()
 
     # Initilisation du jeu
