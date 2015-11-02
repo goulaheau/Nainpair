@@ -216,17 +216,22 @@ class Jeu:
         MenuJeu.fermer_menu()
 
         # Initilisation du jeu
-        global points_joueur1, points_joueur2, canvas, nb_colonnes
+        global points_un_joueur, points_joueur1, points_joueur2, canvas, nb_colonnes
         # Création du canvas dont la taille dépend du nombre de cartes
         canvas = Jeu.creer_canvas(fenetre, nb_colonnes, nb_lignes)
         canvas.pack(side=TOP, padx=2, pady=2)
 
         points_joueur1 = Label(fenetre, text="Joueur 1 : 0", bg="orange", font="Helvetica 16")
         points_joueur2 = Label(fenetre, text="Joueur 2 : 0", font="Helvetica 16")
+        points_un_joueur = Label(fenetre, text="Nombre de coup : 0", font="Helvetica 16")
+
 
         if nb_joueurs == 2:
             points_joueur1.pack(pady=2, side=LEFT)
             points_joueur2.pack(pady=2, side=RIGHT)
+        else:
+            points_un_joueur.pack(pady=2, side=LEFT)
+
 
         Jeu.charger_images()
 
