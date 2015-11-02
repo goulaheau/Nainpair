@@ -100,10 +100,10 @@ class MenuJeu:
         text_regles.pack()
 
     @staticmethod
-    def creer_menu_difficulte(nombre_joueurs):
+    def creer_menu_difficulte(nb_joueurs):
         """
         Crée le menu demandant la difficulte en prenant en compte le nombre de joueurs
-        :param nombre_joueurs: int
+        :param nb_joueurs: int
         :return:
         """
         global fenetre_difficulte, bouton_facile, bouton_moyen, bouton_difficile
@@ -115,7 +115,7 @@ class MenuJeu:
         fenetre_difficulte.pack(padx=50, pady=50)
         fenetre_difficulte.place(x=350, y=100)
 
-        if nombre_joueurs == 1:
+        if nb_joueurs == 1:
             bouton_facile = Button(fenetre_difficulte, text='Facile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 4))
             bouton_moyen = Button(fenetre_difficulte, text='Moyen', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 6))
             bouton_difficile = Button(fenetre_difficulte, text='Difficile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 8))
