@@ -191,7 +191,7 @@ class MenuJeu:
 
 
 class Jeu:
-    global images, cartes, cartes_jouees, nb_lignes, nb_colonnes, choix_cartes, joueur_actuel, score, fini, peut_jouer
+    global images, cartes, cartes_jouees, nb_lignes, nb_colonnes, choix_cartes, joueur_actuel, score, fini, peut_jouer, nb_coups
     images = []
     cartes = []
     cartes_jouees = []
@@ -199,6 +199,7 @@ class Jeu:
     nb_colonnes = 4
     choix_cartes = []
     joueur_actuel = 0
+    nb_coups = 0
     score = [0, 0]
     fini = False
     peut_jouer = True
@@ -223,7 +224,7 @@ class Jeu:
 
         points_joueur1 = Label(fenetre, text="Joueur 1 : 0", bg="orange", font="Helvetica 16")
         points_joueur2 = Label(fenetre, text="Joueur 2 : 0", font="Helvetica 16")
-        points_un_joueur = Label(fenetre, text="Nombre de coup : 0", font="Helvetica 16")
+        points_un_joueur = Label(fenetre, text="Nombre de coups : 0", font="Helvetica 16")
 
 
         if nb_joueurs == 2:
@@ -277,22 +278,26 @@ class Jeu:
         :return:
         """
         global nb_colonnes, nb_lignes, cartes_jouees
-        global joueur_actuel, fini, peut_jouer
+        global joueur_actuel, fini, peut_jouer, nb_coups
         if cartes[cartes_jouees[0] - 1] == cartes[cartes_jouees[1] - 1]:
             # enleve les cartes identiques. Le joueur actuel reste le même
             canvas.delete(cartes_jouees[0])
             canvas.delete(cartes_jouees[1])
             score[joueur_actuel] += 1
+            nb_coups += 1
         else:
             # retourne les cartes différentes. Le joueur actuel change
             canvas.itemconfig(cartes_jouees[0], image=images[0])
             canvas.itemconfig(cartes_jouees[1], image=images[0])
             joueur_actuel = (joueur_actuel + 1) % 2  # la main passe à l'autre joueur
+            nb_coups += 1
         cartes_jouees = []
         text1 = 'Joueur 1 : ' + str(score[0])
         text2 = 'Joueur 2 : ' + str(score[1])
+        text1joueur = 'Nombre de coups : ' + str(nb_coups)
         points_joueur1.config(text=text1)
         points_joueur2.config(text=text2)
+        points_un_joueur.config(text=text1joueur)
         peut_jouer = True  # réactive l'effet du clic de la souris
         if joueur_actuel == 0:  # celui qui joue est en orange
             points_joueur1.config(bg='orange')
@@ -304,10 +309,13 @@ class Jeu:
             fini = True  # afficher le résultat de la partie
             if score[0] > score[1]:
                 texte = "Le joueur 1 a gagné !"
+                print(nb_coups)
             elif score[0] < score[1]:
                 texte = "Le joueur 2 a gagné !"
+                print(nb_coups)
             else:
                 texte = "Egalité !"
+                print(nb_coups)
             canvas.create_rectangle(0, 0, (155 * nb_colonnes) + 20, (205 * nb_lignes) + 20, fill='white')
             canvas.create_text((55 * nb_colonnes) + 10, (55 * nb_lignes) + 10, text=texte, font='Calibri 24', fill='black')
 
@@ -382,9 +390,10 @@ class Jeu:
         Redémarre une partie et change éventuellement la difficulté
         :return:
         """
-        global canvas, joueur_actuel, score, nb_lignes, nb_colonnes
+        global canvas, joueur_actuel, score, nb_lignes, nb_colonnes, nb_coups
         joueur_actuel = 0
         score = [0, 0]
+        nb_coups = 0
         del cartes[:]
         del cartes_jouees[:]
         canvas.destroy()
@@ -397,8 +406,10 @@ class Jeu:
                 canvas.create_image((155 * i) + 60, (205 * j) + 60, image=images[0])
         text1 = 'Joueur 1 : ' + str(score[0] * 2)
         text2 = 'Joueur 2 : ' + str(score[1] * 2)
+        text1joueur = 'Nombre de coups : ' + str(nb_coups)
         points_joueur1.config(text=text1, bg='orange')
         points_joueur2.config(text=text2, bg='white')
+        points_un_joueur.config(text=text1joueur, bg='white')
 
 
 fenetre = Fenetre()
