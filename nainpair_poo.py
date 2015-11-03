@@ -106,7 +106,7 @@ class MenuJeu:
         :param nb_joueurs: int
         :return:
         """
-        global fenetre_difficulte, bouton_facile, bouton_moyen, bouton_difficile
+        global fenetre_difficulte, bouton_facile, bouton_moyen, bouton_difficile, bouton_difficulte_personnalise, slider_difficulte_personnalise
 
         MenuJeu.fermer_menu_joueur()
         MenuJeu.fermer_menu()
@@ -114,19 +114,25 @@ class MenuJeu:
         fenetre_difficulte = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
         fenetre_difficulte.pack(padx=50, pady=50)
         fenetre_difficulte.place(x=350, y=100)
+        slider_difficulte_personnalise = Scale(fenetre_difficulte, from_=1, to=10, orient=HORIZONTAL, label="Difficulté Personnalisée", length=200)
 
         if nb_joueurs == 1:
             bouton_facile = Button(fenetre_difficulte, text='Facile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 4))
             bouton_moyen = Button(fenetre_difficulte, text='Moyen', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 6))
             bouton_difficile = Button(fenetre_difficulte, text='Difficile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 8))
+            bouton_difficulte_personnalise = Button(fenetre_difficulte, text='Lancer', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, slider_difficulte_personnalise.get()))
         else:
             bouton_facile = Button(fenetre_difficulte, text='Facile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 4))
             bouton_moyen = Button(fenetre_difficulte, text='Moyen', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 6))
             bouton_difficile = Button(fenetre_difficulte, text='Difficile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 8))
+            bouton_difficulte_personnalise = Button(fenetre_difficulte, text='Lancer', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, slider_difficulte_personnalise.get()))
 
         bouton_facile.pack(padx=50, pady=10)
         bouton_moyen.pack(padx=25, pady=25)
         bouton_difficile.pack(padx=25, pady=25)
+
+        slider_difficulte_personnalise.pack(padx=25, pady=25)
+        bouton_difficulte_personnalise.pack(padx=25, pady=25)
 
         fermer_menu_difficulte = Button(fenetre_difficulte, text='Retour', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=MenuJeu.fermer_menu_difficulte)
         fermer_menu_difficulte.pack(padx=25, pady=25)
@@ -184,6 +190,8 @@ class MenuJeu:
         bouton_facile.pack_forget()
         bouton_moyen.pack_forget()
         bouton_difficile.pack_forget()
+        bouton_difficulte_personnalise.pack_forget()
+        slider_difficulte_personnalise.pack_forget()
 
         fenetre_difficulte.destroy()
 
@@ -226,13 +234,11 @@ class Jeu:
         points_joueur2 = Label(fenetre, text="Joueur 2 : 0", font="Helvetica 16")
         points_un_joueur = Label(fenetre, text="Nombre de coups : 0", font="Helvetica 16")
 
-
         if nb_joueurs == 2:
             points_joueur1.pack(pady=2, side=LEFT)
             points_joueur2.pack(pady=2, side=RIGHT)
         else:
             points_un_joueur.pack(pady=2, side=LEFT)
-
 
         Jeu.charger_images()
 
