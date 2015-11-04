@@ -13,18 +13,6 @@ class Fenetre(Tk):
         self.geometry('1200x800')
         self.configure(background="#a1dbcd")
 
-        top = Menu(self)
-        self.config(menu=top)
-        jeu = Menu(top, tearoff=False)
-        top.add_cascade(label='Jeu', menu=jeu)
-        jeu.add_command(label='Nouvelle partie', command=Jeu.reinit)
-        submenu = Menu(jeu, tearoff=False)
-        jeu.add_cascade(label='Dimensions', menu=submenu)
-        submenu.add_command(label='4 x 4', command=Jeu.jeu4x4)
-        submenu.add_command(label='4 x 6', command=Jeu.jeu4x6)
-        submenu.add_command(label='4 x 8', command=Jeu.jeu4x8)
-        jeu.add_command(label='Quitter', command=self.destroy)
-
 
 class MenuJeu:
     def __init__(self):
@@ -75,7 +63,7 @@ class MenuJeu:
         bouton_fermer_menu_joueur.pack(padx=25, pady=10)
 
     @staticmethod
-    def creer_menu_regles():
+    def creer_menu_regles(en_partie=False):
         """
         Affiche le menu contenant les règles
         :return:
@@ -91,7 +79,7 @@ class MenuJeu:
         fenetre_menu_regles = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
         fenetre_menu_regles.pack(pady=50)
 
-        bouton_fermer_menu_regles = Button(fenetre_menu_regles, text='Retour', font=("Arial", 23), fg="#a1dbcd", bg="#383a39", command=MenuJeu.fermer_menu_regles)
+        bouton_fermer_menu_regles = Button(fenetre_menu_regles, text='Retour', font=("Arial", 23), fg="#a1dbcd", bg="#383a39", command=lambda: MenuJeu.fermer_menu_regles(en_partie))
         bouton_fermer_menu_regles.pack(padx=25, pady=10, side=BOTTOM)
 
         text_regles = Label(fenetre_menu_regles, text=contenu, font=("Arial", 15))
@@ -115,15 +103,15 @@ class MenuJeu:
         slider_difficulte_personnalise = Scale(fenetre_difficulte, from_=1, to=10, orient=HORIZONTAL, font=("Arial", 20), fg="#383a39", length=200)
 
         if nb_joueurs == 1:
-            bouton_facile = Button(fenetre_difficulte, text='Facile', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 4))
-            bouton_moyen = Button(fenetre_difficulte, text='Moyen', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 6))
-            bouton_difficile = Button(fenetre_difficulte, text='Difficile', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 8))
-            bouton_difficulte_personnalise = Button(fenetre_difficulte, text='Lancer', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, slider_difficulte_personnalise.get()))
+            bouton_facile = Button(fenetre_difficulte, text='Facile', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 4, True))
+            bouton_moyen = Button(fenetre_difficulte, text='Moyen', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 6, True))
+            bouton_difficile = Button(fenetre_difficulte, text='Difficile', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 8, True))
+            bouton_difficulte_personnalise = Button(fenetre_difficulte, text='Lancer', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, slider_difficulte_personnalise.get(), True))
         else:
-            bouton_facile = Button(fenetre_difficulte, text='Facile', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 4))
-            bouton_moyen = Button(fenetre_difficulte, text='Moyen', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 6))
-            bouton_difficile = Button(fenetre_difficulte, text='Difficile', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 8))
-            bouton_difficulte_personnalise = Button(fenetre_difficulte, text='Lancer', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, slider_difficulte_personnalise.get()))
+            bouton_facile = Button(fenetre_difficulte, text='Facile', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 4, True))
+            bouton_moyen = Button(fenetre_difficulte, text='Moyen', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 6, True))
+            bouton_difficile = Button(fenetre_difficulte, text='Difficile', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 8, True))
+            bouton_difficulte_personnalise = Button(fenetre_difficulte, text='Lancer', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, slider_difficulte_personnalise.get(), True))
 
         bouton_facile.pack(padx=25, pady=15)
         bouton_moyen.pack(padx=25, pady=15)
@@ -166,7 +154,7 @@ class MenuJeu:
         MenuJeu.creer_menu()
 
     @staticmethod
-    def fermer_menu_regles():
+    def fermer_menu_regles(en_partie):
         """
         Ferme le menu menu contenant les règles
         :return:
@@ -176,8 +164,10 @@ class MenuJeu:
         text_regles.pack_forget()
 
         fenetre_menu_regles.destroy()
-
-        MenuJeu.creer_menu()
+        if en_partie:
+            canvas.pack()
+        else:
+            MenuJeu.creer_menu()
 
     @staticmethod
     def fermer_menu_difficulte():
@@ -212,19 +202,46 @@ class Jeu:
     peut_jouer = True
 
     @staticmethod
-    def creer_jeu(nb_joueurs, difficulte):
+    def creer_jeu(nb_joueurs, difficulte, premiere_fois=False):
         """
         Affiche le menu permettant de choisir la difficulté pour 2 joueurs
         :param difficulte: int
         :param nb_joueurs: int
         :return:
         """
-        MenuJeu.fermer_menu_difficulte()
-        MenuJeu.fermer_menu_joueur()
-        MenuJeu.fermer_menu()
+        if premiere_fois:
+            MenuJeu.fermer_menu_difficulte()
+            MenuJeu.fermer_menu_joueur()
+            MenuJeu.fermer_menu()
 
         # Initilisation du jeu
-        global points_un_joueur, points_joueur1, points_joueur2, canvas, nb_colonnes
+        global points_un_joueur, points_joueur1, points_joueur2, canvas, nb_colonnes, top, jeu, submenu
+
+        top = Menu(fenetre)
+        fenetre.config(menu=top)
+
+        jeu = Menu(top, tearoff=False)
+        top.add_cascade(label='Jeu', menu=jeu)
+
+        submenu = Menu(jeu, tearoff=False)
+        jeu.add_cascade(label='Nouvelle Partie', menu=submenu)
+
+        subsubmenu = Menu(submenu, tearoff=False)
+        submenu.add_cascade(label='1 Nain', menu=subsubmenu)
+        subsubmenu.add_command(label='Facile', command=lambda: Jeu.reinit(1, 4, True))
+        subsubmenu.add_command(label='Moyen', command=lambda: Jeu.reinit(1, 6, True))
+        subsubmenu.add_command(label='Difficile', command=lambda: Jeu.reinit(1, 8, True))
+
+        subsubmenu2 = Menu(submenu, tearoff=False)
+        submenu.add_cascade(label='2 Nain', menu=subsubmenu2)
+        subsubmenu2.add_command(label='Facile', command=lambda: Jeu.reinit(2, 4, True))
+        subsubmenu2.add_command(label='Moyen', command=lambda: Jeu.reinit(2, 6, True))
+        subsubmenu2.add_command(label='Difficile', command=lambda: Jeu.reinit(2, 8, True))
+
+        jeu.add_cascade(label='Règles', command=lambda: Jeu.afficher_regle(True))
+        jeu.add_cascade(label='Menu', command=Jeu.fermer_jeu)
+        jeu.add_command(label='Quitter', command=fenetre.destroy)
+
         # Création du canvas dont la taille dépend du nombre de cartes
         canvas = Jeu.creer_canvas(fenetre, nb_colonnes, nb_lignes)
         canvas.pack(side=TOP, padx=2, pady=2)
@@ -233,17 +250,14 @@ class Jeu:
         points_joueur2 = Label(fenetre, text="Joueur 2 : 0", font="Helvetica 16")
         points_un_joueur = Label(fenetre, text="Nombre de coups : 0", font="Helvetica 16")
 
-        if nb_joueurs == 2:
-            points_joueur1.pack(pady=2, side=LEFT)
-            points_joueur2.pack(pady=2, side=RIGHT)
-        else:
-            points_un_joueur.pack(pady=2, side=LEFT)
+        points_joueur1.pack(pady=2, side=LEFT)
+        points_joueur2.pack(pady=2, side=RIGHT)
+        points_un_joueur.pack(pady=2, side=LEFT)
 
         Jeu.charger_images()
 
         # Solutionne le problème d'affichage des scores
-        nb_colonnes = difficulte
-        Jeu.reinit()
+        Jeu.reinit(nb_joueurs, difficulte)
 
     @staticmethod
     def charger_images():
@@ -321,7 +335,7 @@ class Jeu:
             else:
                 texte = "Egalité !"
                 print(nb_coups)
-            canvas.create_rectangle(0, 0, (155 * nb_colonnes) + 20, (205 * nb_lignes) + 20, fill='white')
+            canvas.create_rectangle(0, 0, (116 * nb_colonnes) + 20, (166 * nb_lignes) + 20, fill='white')
             canvas.create_text((55 * nb_colonnes) + 10, (55 * nb_lignes) + 10, text=texte, font='Calibri 24', fill='black')
 
     @staticmethod
@@ -349,36 +363,6 @@ class Jeu:
             fenetre.after(1500, Jeu.gerer_tirage)  # patiente 1,5 secondes
 
     @staticmethod
-    def jeu4x4():
-        """
-        Le jeu passe en 4x4
-        :return:
-        """
-        global nb_colonnes
-        nb_colonnes = 4
-        Jeu.reinit()
-
-    @staticmethod
-    def jeu4x6():
-        """
-        Le jeu passe en 4x6
-        :return:
-        """
-        global nb_colonnes
-        nb_colonnes = 6
-        Jeu.reinit()
-
-    @staticmethod
-    def jeu4x8():
-        """
-        Le jeu passe en 4x8
-        :return:
-        """
-        global nb_colonnes
-        nb_colonnes = 8
-        Jeu.reinit()
-
-    @staticmethod
     def creer_canvas(fen, col, lig):
         """
         Création du canvas
@@ -387,35 +371,94 @@ class Jeu:
         :param lig:
         :return:
         """
-        return Canvas(fen, width=(175 * col) + 10, height=(225 * lig) + 10, bg='#a1dbcd', borderwidth=0)
+        return Canvas(fen, width=(125 * col), height=(164 * lig), bg='#a1dbcd', borderwidth=0)
 
     @staticmethod
-    def reinit():
+    def reinit(nb_joueurs, difficulte, nouvelle_partie=False):
         """
         Redémarre une partie et change éventuellement la difficulté
         :return:
         """
-        global canvas, joueur_actuel, score, nb_lignes, nb_colonnes, nb_coups
+        global canvas, joueur_actuel, score, nb_lignes, nb_colonnes, nb_coups, points_joueur1, points_joueur2, points_un_joueur
+
         joueur_actuel = 0
         score = [0, 0]
         nb_coups = 0
         del cartes[:]
         del cartes_jouees[:]
         canvas.destroy()
+        nb_colonnes = difficulte
         canvas = Jeu.creer_canvas(fenetre, nb_colonnes, nb_lignes)
         canvas.pack(pady=50)
         canvas.bind("<Button-1>", Jeu.cliquer_carte)  # permet le clic sur les cartes
+
+        if nb_joueurs == 2:
+            points_un_joueur.pack_forget()
+            points_joueur1.pack(pady=2, side=LEFT)
+            points_joueur2.pack(pady=2, side=RIGHT)
+        else:
+            points_joueur1.pack_forget()
+            points_joueur2.pack_forget()
+            points_un_joueur.pack(pady=2, side=LEFT)
+
         Jeu.melanger_cartes()
+
         for i in range(nb_colonnes):  # dessin des cartes retournées
             for j in range(nb_lignes):
-                canvas.create_image((155 * i) + 60, (205 * j) + 60, anchor='nw', image=images[0])
+                canvas.create_image((126 * i), (166 * j), anchor='nw', image=images[0])
+
         text1 = 'Joueur 1 : ' + str(score[0] * 2)
         text2 = 'Joueur 2 : ' + str(score[1] * 2)
         text1joueur = 'Nombre de coups : ' + str(nb_coups)
+
         points_joueur1.config(text=text1, bg='orange')
         points_joueur2.config(text=text2, bg='white')
         points_un_joueur.config(text=text1joueur, bg='white')
 
+        if nouvelle_partie:
+            Jeu.reinit(nb_joueurs, difficulte)
+
+    @staticmethod
+    def recreer_jeu(nb_joueurs, difficulte):
+        """
+        Ferme le menu demandant la difficulte en prenant en compte le nombre de joueurs
+        :return:
+        """
+        global points_un_joueur, points_joueur1, points_joueur2, canvas, nb_colonnes, top, jeu, submenu
+        top.pack_forget()
+        jeu.pack_forget()
+        submenu.pack_forget()
+        canvas.pack_forget()
+        points_joueur1.pack_forget()
+        points_joueur2.pack_forget()
+        points_un_joueur.pack_forget()
+
+        top.destroy()
+
+        Jeu.creer_jeu(nb_joueurs, difficulte)
+
+    @staticmethod
+    def fermer_jeu():
+        """
+        Ferme le menu demandant la difficulte en prenant en compte le nombre de joueurs
+        :return:
+        """
+        top.pack_forget()
+        jeu.pack_forget()
+        submenu.pack_forget()
+        canvas.pack_forget()
+        points_joueur1.pack_forget()
+        points_joueur2.pack_forget()
+        points_un_joueur.pack_forget()
+
+        top.destroy()
+
+        MenuJeu.creer_menu()
+
+    @staticmethod
+    def afficher_regle(en_partie):
+        canvas.pack_forget()
+        MenuJeu.creer_menu_regles(en_partie)
 
 fenetre = Fenetre()
 menu = MenuJeu()
