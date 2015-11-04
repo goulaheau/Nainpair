@@ -38,19 +38,19 @@ class MenuJeu:
         """
         global fenetre_menu, bouton_jouer, bouton_regles, bouton_score, bouton_quitter
         fenetre_menu = Frame(fenetre, borderwidth=2, relief=GROOVE, width=50, height=500)
-        fenetre_menu.pack()
+        fenetre_menu.pack(pady=50)
 
-        bouton_jouer = Button(fenetre_menu, text='Jouer', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=MenuJeu.creer_menu_joueur)
-        bouton_jouer.pack(padx=50, pady=10)
+        bouton_jouer = Button(fenetre_menu, text='Jouer', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=MenuJeu.creer_menu_joueur)
+        bouton_jouer.pack(padx=25, pady=10)
 
-        bouton_regles = Button(fenetre_menu, text='Règles', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=MenuJeu.creer_menu_regles)
-        bouton_regles.pack(padx=25, pady=25)
+        bouton_regles = Button(fenetre_menu, text='Règles', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=MenuJeu.creer_menu_regles)
+        bouton_regles.pack(padx=25, pady=10)
 
-        bouton_score = Button(fenetre_menu, text='Scores', font=("Arial", 50), fg="#a1dbcd", bg="#383a39")
-        bouton_score.pack(padx=25, pady=25)
+        bouton_score = Button(fenetre_menu, text='Scores', font=("Arial", 35), fg="#a1dbcd", bg="#383a39")
+        bouton_score.pack(padx=25, pady=10)
 
-        bouton_quitter = Button(fenetre_menu, text='Quitter', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Fenetre.destroy(fenetre))
-        bouton_quitter.pack(padx=25, pady=25)
+        bouton_quitter = Button(fenetre_menu, text='Quitter', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Fenetre.destroy(fenetre))
+        bouton_quitter.pack(padx=25, pady=10)
 
     @staticmethod
     def creer_menu_joueur():
@@ -63,17 +63,16 @@ class MenuJeu:
         MenuJeu.fermer_menu()
 
         fenetre_menu_joueur = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
-        fenetre_menu_joueur.pack(padx=50, pady=50)
-        fenetre_menu_joueur.place(x=350, y=100)
+        fenetre_menu_joueur.pack(pady=50)
 
-        bouton_un_nain = Button(fenetre_menu_joueur, text='1 Nain', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: MenuJeu.creer_menu_difficulte(1))
-        bouton_un_nain.pack(padx=50, pady=10)
+        bouton_un_nain = Button(fenetre_menu_joueur, text='1 Nain', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: MenuJeu.creer_menu_difficulte(1))
+        bouton_un_nain.pack(padx=25, pady=10)
 
-        bouton_deux_nains = Button(fenetre_menu_joueur, text='2 Nains', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: MenuJeu.creer_menu_difficulte(2))
-        bouton_deux_nains.pack(padx=25, pady=25)
+        bouton_deux_nains = Button(fenetre_menu_joueur, text='2 Nains', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: MenuJeu.creer_menu_difficulte(2))
+        bouton_deux_nains.pack(padx=25, pady=10)
 
-        bouton_fermer_menu_joueur = Button(fenetre_menu_joueur, text='Retour', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=MenuJeu.fermer_menu_joueur)
-        bouton_fermer_menu_joueur.pack(padx=25, pady=25)
+        bouton_fermer_menu_joueur = Button(fenetre_menu_joueur, text='Retour', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=MenuJeu.fermer_menu_joueur)
+        bouton_fermer_menu_joueur.pack(padx=25, pady=10)
 
     @staticmethod
     def creer_menu_regles():
@@ -85,19 +84,18 @@ class MenuJeu:
 
         MenuJeu.fermer_menu()
 
-        fichier_regles = open('regles/regles.txt', "r")
+        fichier_regles = open('regles.txt', "r")
         contenu = fichier_regles.read()
         fichier_regles.close()
 
         fenetre_menu_regles = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
-        fenetre_menu_regles.pack()
-        fenetre_menu_regles.place(x=150, y=100)
+        fenetre_menu_regles.pack(pady=50)
 
         bouton_fermer_menu_regles = Button(fenetre_menu_regles, text='Retour', font=("Arial", 23), fg="#a1dbcd", bg="#383a39", command=MenuJeu.fermer_menu_regles)
-        bouton_fermer_menu_regles.pack(padx=25, pady=25, side=BOTTOM)
+        bouton_fermer_menu_regles.pack(padx=25, pady=10, side=BOTTOM)
 
-        text_regles = Label(fenetre_menu_regles, text=contenu, font=("Arial", 20))
-        text_regles.pack()
+        text_regles = Label(fenetre_menu_regles, text=contenu, font=("Arial", 15))
+        text_regles.pack(padx=25, pady=10)
 
     @staticmethod
     def creer_menu_difficulte(nb_joueurs):
@@ -112,30 +110,29 @@ class MenuJeu:
         MenuJeu.fermer_menu()
 
         fenetre_difficulte = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
-        fenetre_difficulte.pack(padx=50, pady=50)
-        fenetre_difficulte.place(x=350, y=100)
+        fenetre_difficulte.pack(pady=50)
         slider_difficulte_personnalise = Scale(fenetre_difficulte, from_=1, to=10, orient=HORIZONTAL, label="Difficulté Personnalisée", length=200)
 
         if nb_joueurs == 1:
-            bouton_facile = Button(fenetre_difficulte, text='Facile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 4))
-            bouton_moyen = Button(fenetre_difficulte, text='Moyen', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 6))
-            bouton_difficile = Button(fenetre_difficulte, text='Difficile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 8))
-            bouton_difficulte_personnalise = Button(fenetre_difficulte, text='Lancer', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, slider_difficulte_personnalise.get()))
+            bouton_facile = Button(fenetre_difficulte, text='Facile', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 4))
+            bouton_moyen = Button(fenetre_difficulte, text='Moyen', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 6))
+            bouton_difficile = Button(fenetre_difficulte, text='Difficile', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 8))
+            bouton_difficulte_personnalise = Button(fenetre_difficulte, text='Lancer', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, slider_difficulte_personnalise.get()))
         else:
-            bouton_facile = Button(fenetre_difficulte, text='Facile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 4))
-            bouton_moyen = Button(fenetre_difficulte, text='Moyen', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 6))
-            bouton_difficile = Button(fenetre_difficulte, text='Difficile', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 8))
-            bouton_difficulte_personnalise = Button(fenetre_difficulte, text='Lancer', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, slider_difficulte_personnalise.get()))
+            bouton_facile = Button(fenetre_difficulte, text='Facile', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 4))
+            bouton_moyen = Button(fenetre_difficulte, text='Moyen', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 6))
+            bouton_difficile = Button(fenetre_difficulte, text='Difficile', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 8))
+            bouton_difficulte_personnalise = Button(fenetre_difficulte, text='Lancer', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, slider_difficulte_personnalise.get()))
 
-        bouton_facile.pack(padx=50, pady=10)
-        bouton_moyen.pack(padx=25, pady=25)
-        bouton_difficile.pack(padx=25, pady=25)
+        bouton_facile.pack(padx=25, pady=10)
+        bouton_moyen.pack(padx=25, pady=10)
+        bouton_difficile.pack(padx=25, pady=10)
 
-        slider_difficulte_personnalise.pack(padx=25, pady=25)
-        bouton_difficulte_personnalise.pack(padx=25, pady=25)
+        slider_difficulte_personnalise.pack(padx=25, pady=10)
+        bouton_difficulte_personnalise.pack(padx=25, pady=10)
 
-        fermer_menu_difficulte = Button(fenetre_difficulte, text='Retour', font=("Arial", 50), fg="#a1dbcd", bg="#383a39", command=MenuJeu.fermer_menu_difficulte)
-        fermer_menu_difficulte.pack(padx=25, pady=25)
+        fermer_menu_difficulte = Button(fenetre_difficulte, text='Retour', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=MenuJeu.fermer_menu_difficulte)
+        fermer_menu_difficulte.pack(padx=25, pady=10)
 
     @staticmethod
     def fermer_menu():
