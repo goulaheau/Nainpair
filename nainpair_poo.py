@@ -111,7 +111,8 @@ class MenuJeu:
 
         fenetre_difficulte = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
         fenetre_difficulte.pack(pady=50)
-        slider_difficulte_personnalise = Scale(fenetre_difficulte, from_=1, to=10, orient=HORIZONTAL, label="Difficulté Personnalisée", length=200)
+        text_difficulte_personnalise = Label(fenetre_difficulte, text="Difficulté Personnalisé", font=("Arial", 20), fg="#383a39")
+        slider_difficulte_personnalise = Scale(fenetre_difficulte, from_=1, to=10, orient=HORIZONTAL, font=("Arial", 20), fg="#383a39", length=200)
 
         if nb_joueurs == 1:
             bouton_facile = Button(fenetre_difficulte, text='Facile', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(1, 4))
@@ -124,15 +125,16 @@ class MenuJeu:
             bouton_difficile = Button(fenetre_difficulte, text='Difficile', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, 8))
             bouton_difficulte_personnalise = Button(fenetre_difficulte, text='Lancer', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.creer_jeu(2, slider_difficulte_personnalise.get()))
 
-        bouton_facile.pack(padx=25, pady=10)
-        bouton_moyen.pack(padx=25, pady=10)
-        bouton_difficile.pack(padx=25, pady=10)
+        bouton_facile.pack(padx=25, pady=15)
+        bouton_moyen.pack(padx=25, pady=15)
+        bouton_difficile.pack(padx=25, pady=15)
 
-        slider_difficulte_personnalise.pack(padx=25, pady=10)
-        bouton_difficulte_personnalise.pack(padx=25, pady=10)
+        text_difficulte_personnalise.pack(padx=25, pady=0)
+        slider_difficulte_personnalise.pack(padx=25, pady=0)
+        bouton_difficulte_personnalise.pack(padx=25, pady=5)
 
         fermer_menu_difficulte = Button(fenetre_difficulte, text='Retour', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=MenuJeu.fermer_menu_difficulte)
-        fermer_menu_difficulte.pack(padx=25, pady=10)
+        fermer_menu_difficulte.pack(padx=25, pady=15)
 
     @staticmethod
     def fermer_menu():
@@ -385,7 +387,7 @@ class Jeu:
         :param lig:
         :return:
         """
-        return Canvas(fen, width=(155 * col) + 10, height=(205 * lig) + 10, bg='white')
+        return Canvas(fen, width=(175 * col) + 10, height=(225 * lig) + 10, bg='#a1dbcd', borderwidth=0)
 
     @staticmethod
     def reinit():
@@ -401,12 +403,12 @@ class Jeu:
         del cartes_jouees[:]
         canvas.destroy()
         canvas = Jeu.creer_canvas(fenetre, nb_colonnes, nb_lignes)
-        canvas.pack(side=TOP, padx=5, pady=5)
+        canvas.pack(pady=50)
         canvas.bind("<Button-1>", Jeu.cliquer_carte)  # permet le clic sur les cartes
         Jeu.melanger_cartes()
         for i in range(nb_colonnes):  # dessin des cartes retournées
             for j in range(nb_lignes):
-                canvas.create_image((155 * i) + 60, (205 * j) + 60, image=images[0])
+                canvas.create_image((155 * i) + 60, (205 * j) + 60, anchor='nw', image=images[0])
         text1 = 'Joueur 1 : ' + str(score[0] * 2)
         text2 = 'Joueur 2 : ' + str(score[1] * 2)
         text1joueur = 'Nombre de coups : ' + str(nb_coups)
