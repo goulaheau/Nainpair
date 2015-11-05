@@ -200,6 +200,7 @@ class Jeu:
     score = [0, 0]
     fini = False
     peut_jouer = True
+    nombre_joueurs = 1
 
     @staticmethod
     def creer_jeu(nb_joueurs, difficulte, premiere_fois=False):
@@ -297,7 +298,7 @@ class Jeu:
         :return:
         """
         global nb_colonnes, nb_lignes, cartes_jouees
-        global joueur_actuel, fini, peut_jouer, nb_coups
+        global joueur_actuel, fini, peut_jouer, nb_coups, canvas, nombre_joueurs
         if cartes[cartes_jouees[0] - 1] == cartes[cartes_jouees[1] - 1]:
             # enleve les cartes identiques. Le joueur actuel reste le même
             canvas.delete(cartes_jouees[0])
@@ -310,33 +311,45 @@ class Jeu:
             canvas.itemconfig(cartes_jouees[1], image=images[0])
             joueur_actuel = (joueur_actuel + 1) % 2  # la main passe à l'autre joueur
             nb_coups += 1
+
         cartes_jouees = []
+
         text1 = 'Joueur 1 : ' + str(score[0])
         text2 = 'Joueur 2 : ' + str(score[1])
         text1joueur = 'Nombre de coups : ' + str(nb_coups)
+
         points_joueur1.config(text=text1)
         points_joueur2.config(text=text2)
         points_un_joueur.config(text=text1joueur)
+
         peut_jouer = True  # réactive l'effet du clic de la souris
+
         if joueur_actuel == 0:  # celui qui joue est en orange
             points_joueur1.config(bg='orange')
             points_joueur2.config(bg='white')
         else:
             points_joueur2.config(bg='orange')
             points_joueur1.config(bg='white')
+
         if score[0] + score[1] == (nb_colonnes * nb_lignes) // 2:
             fini = True  # afficher le résultat de la partie
-            if score[0] > score[1]:
-                texte = "Le joueur 1 a gagné !"
-                print(nb_coups)
-            elif score[0] < score[1]:
-                texte = "Le joueur 2 a gagné !"
-                print(nb_coups)
+            if nombre_joueurs == 1:
+                texte = 'Vous avez gagné en ' + str(nb_coups) + ' coups.'
             else:
-                texte = "Egalité !"
-                print(nb_coups)
-            canvas.create_rectangle(0, 0, (116 * nb_colonnes) + 20, (166 * nb_lignes) + 20, fill='white')
-            canvas.create_text((55 * nb_colonnes) + 10, (55 * nb_lignes) + 10, text=texte, font='Calibri 24', fill='black')
+                if score[0] > score[1]:
+                    texte = "Le joueur 1 a gagné !"
+                elif score[0] < score[1]:
+                    texte = "Le joueur 2 a gagné !"
+                else:
+                    texte = "Egalité !"
+
+            canvas.pack_forget()
+            canvas.destroy()
+            canvas = Canvas(fenetre, width=600, height=400)
+            canvas.pack(pady=50)
+            canvas.create_text(300, 200, text=texte, font='Calibri 24', fill='black')
+            bouton_menu = Button(canvas, text='Retour au Menu', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=Jeu.fermer_jeu)
+            bouton_menu.pack(padx=100, pady=275)
 
     @staticmethod
     def cliquer_carte(event):
@@ -345,13 +358,13 @@ class Jeu:
         :param event:
         :return:
         """
-        global fini, fenetre, cartes_jouees, peut_jouer
+        global fini, fenetre, cartes_jouees, peut_jouer, nombre_joueurs, nb_colonnes
         if len(cartes_jouees) < 2:
             carte_selection = canvas.find_closest(event.x, event.y)
             carte_id = carte_selection[0]
             if fini:
                 fini = False
-                Jeu.reinit()
+                Jeu.reinit(nombre_joueurs, nb_colonnes)
             else:
                 canvas.itemconfig(carte_id, image=images[cartes[carte_id - 1]])
                 if len(cartes_jouees) == 0:
@@ -379,7 +392,7 @@ class Jeu:
         Redémarre une partie et change éventuellement la difficulté
         :return:
         """
-        global canvas, joueur_actuel, score, nb_lignes, nb_colonnes, nb_coups, points_joueur1, points_joueur2, points_un_joueur
+        global canvas, joueur_actuel, score, nb_lignes, nb_colonnes, nb_coups, points_joueur1, points_joueur2, points_un_joueur, nombre_joueurs
 
         joueur_actuel = 0
         score = [0, 0]
@@ -388,6 +401,7 @@ class Jeu:
         del cartes_jouees[:]
         canvas.destroy()
         nb_colonnes = difficulte
+        nombre_joueurs = nb_joueurs
         canvas = Jeu.creer_canvas(fenetre, nb_colonnes, nb_lignes)
         canvas.pack(pady=50)
         canvas.bind("<Button-1>", Jeu.cliquer_carte)  # permet le clic sur les cartes
