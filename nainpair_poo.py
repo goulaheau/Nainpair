@@ -365,15 +365,15 @@ class Jeu:
 
             texte_entrez_nom = Label(canvas, text="Entrez votre nom", font=("Arial", 15))
             zone_entrez_nom = Entry(canvas, bd=1)
-            bouton_sauvegarder_score = Button(canvas, text='Sauvergarder le score', font=("Arial", 15), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.sauvegarder_score(nb_coups, zone_entrez_nom.get()))
+            bouton_sauvegarder_score = Button(canvas, text='Sauvergarder le score', font=("Arial", 15), fg="#a1dbcd", bg="#383a39")
 
             texte_entrez_nom.pack(pady=15)
             zone_entrez_nom.pack(pady=15)
-            bouton_sauvegarder_score.pack(padx=100, pady=50)
+            bouton_sauvegarder_score.pack(padx=100, pady=25)
 
-            canvas.create_text(300, 200, text=texte, font='Calibri 24', fill='black')
+            canvas.create_text(300, 240, text=texte, font='Calibri 24', fill='black')
             bouton_menu = Button(canvas, text='Retour au Menu', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=Jeu.fermer_jeu)
-            bouton_menu.pack(padx=100, pady=250)
+            bouton_menu.pack(padx=100, pady=100)
 
     @staticmethod
     def cliquer_carte(event):
@@ -498,10 +498,15 @@ class Jeu:
         canvas.pack_forget()
         MenuJeu.creer_menu_regles(en_partie)
 
-    @staticmethod
-    def sauvegarder_score(nb_coups, nom_joueur):
-
-
+    # @staticmethod
+    # def sauvegarder_score(nb_coups, nom_joueur):
+    #     global nb_colonnes
+    #
+    #     ligne_a_inserer = [str(nb_coups) + str(nom_joueur)]
+    #     file2 = open('scores/score' + str(nb_colonnes) + '.txt', 'w')
+    #     ecrire = csv.writer(file2)
+    #     ecrire.writerows(ligne_a_inserer)
+    #     file2.close()
 
 
 fenetre = Fenetre()
