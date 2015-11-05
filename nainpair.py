@@ -157,7 +157,7 @@ class MenuJeu:
     @staticmethod
     def fermer_menu_regles(en_partie):
         """
-        Ferme le menu menu contenant les règles
+        Ferme le menu contenant les règles
         :return:
         """
         fenetre_menu_regles.pack_forget()
@@ -206,7 +206,10 @@ class Jeu:
     @staticmethod
     def creer_jeu(nb_joueurs, difficulte, premiere_fois=False):
         """
-        Affiche le menu permettant de choisir la difficulté pour 2 joueurs
+        Crée le jeu en prenant en compte le :
+        - nombre de joueurs,
+        - la difficulté
+        - et si c'est la première fois qu'on lance le jeu
         :param difficulte: int
         :param nb_joueurs: int
         :return:
@@ -332,24 +335,27 @@ class Jeu:
             points_joueur2.config(bg='orange')
             points_joueur1.config(bg='white')
 
+        # Fin du jeu
         if score[0] + score[1] == (nb_colonnes * nb_lignes) // 2:
             fini = True  # afficher le résultat de la partie
+            # Cas où le joueur est tout seul
             if nombre_joueurs == 1:
+                texte = 'Vous avez gagné en ' + str(nb_coups) + ' coups.\n'
+
                 with open('scores/score' + str(nb_colonnes) + '.txt', 'r') as file1:
                     valeurs = [str(row[0]) + str(row[1]) for row in csv.reader(file1)]
 
-                top_cinq = sorted(valeurs, reverse=True, key=lambda v: v[0])[:5]
-
-                valeurs = 0
-                if valeurs < 5:
-                    if nb_coups < int(top_cinq[0][valeurs]):
-                        valeurs += 1
+                top_cinq = sorted(valeurs, reverse=True, key=lambda v: int(v[0]))[:5]
+                # Compare notre score avec les 5 meilleurs en prenant en compte la difficulté
+                rang = 0
+                if rang < 5:
+                    if nb_coups < int(top_cinq[0][rang]):
+                        rang += 1
                     else:
-                        place = top_cinq[0][valeurs]
-                        texte = "            Vous êtes #" + str(place) + " !\n"
+                        place = top_cinq[0][rang]
+                        texte += "            Vous êtes #" + str(place) + " !"
 
-                texte += 'Vous avez gagné en ' + str(nb_coups) + ' coups.'
-
+            # Cas du mode 2 joueurs
             else:
                 if score[0] > score[1]:
                     texte = "Le joueur 1 a gagné !"
@@ -363,13 +369,15 @@ class Jeu:
             canvas = Canvas(fenetre, width=800, height=400)
             canvas.pack(pady=50)
 
-            texte_entrez_nom = Label(canvas, text="Entrez votre nom", font=("Arial", 15))
-            zone_entrez_nom = Entry(canvas, bd=1)
-            bouton_sauvegarder_score = Button(canvas, text='Sauvergarder le score', font=("Arial", 15), fg="#a1dbcd", bg="#383a39")
+            if nombre_joueurs == 1:
+                texte_entrez_nom = Label(canvas, text="Entrez votre nom", font=("Arial", 15))
+                zone_entrez_nom = Entry(canvas, bd=1, width=24, fg="grey")
+                zone_entrez_nom.insert(0, "Fonction non implémentée")
+                bouton_sauvegarder_score = Button(canvas, text='Sauvergarder le score', font=("Arial", 15), fg="#a1dbcd", bg="#383a39")
 
-            texte_entrez_nom.pack(pady=15)
-            zone_entrez_nom.pack(pady=15)
-            bouton_sauvegarder_score.pack(padx=100, pady=25)
+                texte_entrez_nom.pack(pady=15)
+                zone_entrez_nom.pack(pady=15)
+                bouton_sauvegarder_score.pack(padx=100, pady=25)
 
             canvas.create_text(300, 240, text=texte, font='Calibri 24', fill='black')
             bouton_menu = Button(canvas, text='Retour au Menu', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=Jeu.fermer_jeu)
@@ -495,19 +503,36 @@ class Jeu:
 
     @staticmethod
     def afficher_regle(en_partie):
+        """
+        Affiche les règles durant la partie
+        :param en_partie:
+        :return:
+        """
         canvas.pack_forget()
         MenuJeu.creer_menu_regles(en_partie)
 
-    # @staticmethod
-    # def sauvegarder_score(nb_coups, nom_joueur):
-    #     global nb_colonnes
-    #
-    #     ligne_a_inserer = [str(nb_coups) + str(nom_joueur)]
-    #     file2 = open('scores/score' + str(nb_colonnes) + '.txt', 'w')
-    #     ecrire = csv.writer(file2)
-    #     ecrire.writerows(ligne_a_inserer)
-    #     file2.close()
+    # Fonction non implémentée
+    @staticmethod
+    def sauvegarder_score(nb_coups, nom_joueur, valeurs):
+        """
+        Sauvegarde le score en enlevant le dernier score
+        :param nb_coups: int
+        :param nom_joueur: string
+        :param valeurs: list
+        :return:
+        """
+        global nb_colonnes
 
+        ligne_a_inserer = [nb_coups, nom_joueur]
+        valeurs[4] = ligne_a_inserer
+        file2 = open('scores/score' + str(nb_colonnes) + '.txt', 'w')
+        ecrire = csv.writer(file2)
+        ecrire.writerow(valeurs[0])
+        ecrire.writerow(valeurs[1])
+        ecrire.writerow(valeurs[2])
+        ecrire.writerow(valeurs[3])
+        ecrire.writerow(valeurs[4])
+        file2.close()
 
 fenetre = Fenetre()
 menu = MenuJeu()
