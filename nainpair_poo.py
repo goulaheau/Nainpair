@@ -1,5 +1,6 @@
 from tkinter import *
 from random import randint, shuffle
+import csv
 
 
 class Fenetre(Tk):
@@ -334,7 +335,21 @@ class Jeu:
         if score[0] + score[1] == (nb_colonnes * nb_lignes) // 2:
             fini = True  # afficher le résultat de la partie
             if nombre_joueurs == 1:
-                texte = 'Vous avez gagné en ' + str(nb_coups) + ' coups.'
+                with open('scores/score' + str(nb_colonnes) + '.txt', 'r') as file1:
+                    valeurs = [str(row[0]) + str(row[1]) for row in csv.reader(file1)]
+
+                top_cinq = sorted(valeurs, reverse=True, key=lambda v: v[0])[:5]
+
+                valeurs = 0
+                if valeurs < 5:
+                    if nb_coups < int(top_cinq[0][valeurs]):
+                        valeurs += 1
+                    else:
+                        place = top_cinq[0][valeurs]
+                        texte = "            Vous êtes #" + str(place) + " !\n"
+
+                texte += 'Vous avez gagné en ' + str(nb_coups) + ' coups.'
+
             else:
                 if score[0] > score[1]:
                     texte = "Le joueur 1 a gagné !"
@@ -345,11 +360,20 @@ class Jeu:
 
             canvas.pack_forget()
             canvas.destroy()
-            canvas = Canvas(fenetre, width=600, height=400)
+            canvas = Canvas(fenetre, width=800, height=400)
             canvas.pack(pady=50)
+
+            texte_entrez_nom = Label(canvas, text="Entrez votre nom", font=("Arial", 15))
+            zone_entrez_nom = Entry(canvas, bd=1)
+            bouton_sauvegarder_score = Button(canvas, text='Sauvergarder le score', font=("Arial", 15), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.sauvegarder_score(nb_coups, zone_entrez_nom.get()))
+
+            texte_entrez_nom.pack(pady=15)
+            zone_entrez_nom.pack(pady=15)
+            bouton_sauvegarder_score.pack(padx=100, pady=50)
+
             canvas.create_text(300, 200, text=texte, font='Calibri 24', fill='black')
             bouton_menu = Button(canvas, text='Retour au Menu', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=Jeu.fermer_jeu)
-            bouton_menu.pack(padx=100, pady=275)
+            bouton_menu.pack(padx=100, pady=250)
 
     @staticmethod
     def cliquer_carte(event):
@@ -473,6 +497,12 @@ class Jeu:
     def afficher_regle(en_partie):
         canvas.pack_forget()
         MenuJeu.creer_menu_regles(en_partie)
+
+    @staticmethod
+    def sauvegarder_score(nb_coups, nom_joueur):
+
+
+
 
 fenetre = Fenetre()
 menu = MenuJeu()
