@@ -343,9 +343,10 @@ class Jeu:
                 texte = 'Vous avez gagné en ' + str(nb_coups) + ' coups.\n'
 
                 with open('scores/score' + str(nb_colonnes) + '.txt', 'r') as file1:
-                    valeurs = [str(row[0]) + str(row[1]) for row in csv.reader(file1)]
+                    valeurs = [str(row[0]) + ',' + str(row[1]) for row in csv.reader(file1)]
 
                 top_cinq = sorted(valeurs, reverse=True, key=lambda v: int(v[0]))[:5]
+                print(top_cinq)
                 # Compare notre score avec les 5 meilleurs en prenant en compte la difficulté
                 rang = 0
                 if rang < 5:
@@ -354,6 +355,8 @@ class Jeu:
                     else:
                         place = top_cinq[0][rang]
                         texte += "            Vous êtes #" + str(place) + " !"
+
+                print(top_cinq)
 
             # Cas du mode 2 joueurs
             else:
@@ -372,8 +375,7 @@ class Jeu:
             if nombre_joueurs == 1:
                 texte_entrez_nom = Label(canvas, text="Entrez votre nom", font=("Arial", 15))
                 zone_entrez_nom = Entry(canvas, bd=1, width=24, fg="grey")
-                zone_entrez_nom.insert(0, "Fonction non implémentée")
-                bouton_sauvegarder_score = Button(canvas, text='Sauvergarder le score', font=("Arial", 15), fg="#a1dbcd", bg="#383a39")
+                bouton_sauvegarder_score = Button(canvas, text='Sauvergarder le score', font=("Arial", 15), fg="#a1dbcd", bg="#383a39", command=lambda: Jeu.sauvegarder_score(nb_coups, zone_entrez_nom.get()))
 
                 texte_entrez_nom.pack(pady=15)
                 zone_entrez_nom.pack(pady=15)
@@ -513,25 +515,23 @@ class Jeu:
 
     # Fonction non implémentée
     @staticmethod
-    def sauvegarder_score(nb_coups, nom_joueur, valeurs):
+    def sauvegarder_score(nb_coups, nom_joueur):
         """
         Sauvegarde le score en enlevant le dernier score
         :param nb_coups: int
         :param nom_joueur: string
-        :param valeurs: list
         :return:
         """
         global nb_colonnes
 
+        with open('scores/score' + str(nb_colonnes) + '.txt', 'r') as file1:
+            valeurs = [row for row in csv.reader(file1)]
+
         ligne_a_inserer = [nb_coups, nom_joueur]
         valeurs[4] = ligne_a_inserer
-        file2 = open('scores/score' + str(nb_colonnes) + '.txt', 'w')
+        file2 = open('scores/score' + str(nb_colonnes) + '.txt', 'w', newline='')
         ecrire = csv.writer(file2)
-        ecrire.writerow(valeurs[0])
-        ecrire.writerow(valeurs[1])
-        ecrire.writerow(valeurs[2])
-        ecrire.writerow(valeurs[3])
-        ecrire.writerow(valeurs[4])
+        ecrire.writerows(valeurs)
         file2.close()
 
 fenetre = Fenetre()
