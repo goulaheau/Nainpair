@@ -1,6 +1,7 @@
 from tkinter import *
 from random import randint, shuffle
 import csv
+import operator
 
 
 class Fenetre(Tk):
@@ -35,7 +36,7 @@ class MenuJeu:
         bouton_regles = Button(fenetre_menu, text='Règles', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=MenuJeu.creer_menu_regles)
         bouton_regles.pack(padx=25, pady=10)
 
-        bouton_score = Button(fenetre_menu, text='Scores', font=("Arial", 35), fg="#a1dbcd", bg="#383a39")
+        bouton_score = Button(fenetre_menu, text='Scores', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=MenuJeu.creer_menu_scores)
         bouton_score.pack(padx=25, pady=10)
 
         bouton_quitter = Button(fenetre_menu, text='Quitter', font=("Arial", 35), fg="#a1dbcd", bg="#383a39", command=lambda: Fenetre.destroy(fenetre))
@@ -85,6 +86,83 @@ class MenuJeu:
 
         text_regles = Label(fenetre_menu_regles, text=contenu, font=("Arial", 15))
         text_regles.pack(padx=25, pady=10)
+
+    @staticmethod
+    def creer_menu_scores():
+        """
+        Affiche le menu comportant les scores
+        :return:
+        """
+        global fenetre_menu_scores, bouton_fermer_menu_scores, \
+            text_scores1, text_scores2, text_scores3, text_scores4, text_scores5, text_scores6, text_scores7, text_scores8, text_scores9, text_scores10
+
+        MenuJeu.fermer_menu()
+
+        fenetre_menu_scores = Frame(fenetre, borderwidth=4, relief=GROOVE, width=500, height=250)
+        fenetre_menu_scores.pack(pady=50)
+
+        bouton_fermer_menu_scores = Button(fenetre_menu_scores, text='Retour', font=("Arial", 23), fg="#a1dbcd", bg="#383a39", command=MenuJeu.fermer_menu_scores)
+        bouton_fermer_menu_scores.pack(padx=25, pady=10, side=BOTTOM)
+
+        with open('scores/score1.txt', 'r') as file:
+            valeurs1 = [row for row in csv.reader(file)]
+        text_scores1 = Label(fenetre_menu_scores, text=valeurs1, font=("Arial", 15))
+        text_scores1.pack(padx=25, pady=10)
+        file.close()
+
+        with open('scores/score2.txt', 'r') as file:
+            valeurs2 = [row for row in csv.reader(file)]
+        text_scores2 = Label(fenetre_menu_scores, text=valeurs2, font=("Arial", 15))
+        text_scores2.pack(padx=25, pady=10)
+        file.close()
+
+        with open('scores/score3.txt', 'r') as file:
+            valeurs3 = [row for row in csv.reader(file)]
+        text_scores3 = Label(fenetre_menu_scores, text=valeurs3, font=("Arial", 15))
+        text_scores3.pack(padx=25, pady=10)
+        file.close()
+
+        with open('scores/score4.txt', 'r') as file:
+            valeurs4 = [row for row in csv.reader(file)]
+        text_scores4 = Label(fenetre_menu_scores, text=valeurs4, font=("Arial", 15))
+        text_scores4.pack(padx=25, pady=10)
+        file.close()
+
+        with open('scores/score5.txt', 'r') as file:
+            valeurs5 = [row for row in csv.reader(file)]
+        text_scores5 = Label(fenetre_menu_scores, text=valeurs5, font=("Arial", 15))
+        text_scores5.pack(padx=25, pady=10)
+        file.close()
+
+        with open('scores/score6.txt', 'r') as file:
+            valeurs6 = [row for row in csv.reader(file)]
+        text_scores6 = Label(fenetre_menu_scores, text=valeurs6, font=("Arial", 15))
+        text_scores6.pack(padx=25, pady=10)
+        file.close()
+
+        with open('scores/score7.txt', 'r') as file:
+            valeurs7 = [row for row in csv.reader(file)]
+        text_scores7 = Label(fenetre_menu_scores, text=valeurs7, font=("Arial", 15))
+        text_scores7.pack(padx=25, pady=10)
+        file.close()
+
+        with open('scores/score8.txt', 'r') as file:
+            valeurs8 = [row for row in csv.reader(file)]
+        text_scores8 = Label(fenetre_menu_scores, text=valeurs8, font=("Arial", 15))
+        text_scores8.pack(padx=25, pady=10)
+        file.close()
+
+        with open('scores/score9.txt', 'r') as file:
+            valeurs9 = [row for row in csv.reader(file)]
+        text_scores9 = Label(fenetre_menu_scores, text=valeurs9, font=("Arial", 15))
+        text_scores9.pack(padx=25, pady=10)
+        file.close()
+
+        with open('scores/score10.txt', 'r') as file:
+            valeurs10 = [row for row in csv.reader(file)]
+        text_scores10 = Label(fenetre_menu_scores, text=valeurs10, font=("Arial", 15))
+        text_scores10.pack(padx=25, pady=10)
+        file.close()
 
     @staticmethod
     def creer_menu_difficulte(nb_joueurs):
@@ -169,6 +247,29 @@ class MenuJeu:
             canvas.pack()
         else:
             MenuJeu.creer_menu()
+
+    @staticmethod
+    def fermer_menu_scores():
+        """
+        Ferme le menu contenant les scores
+        :return:
+        """
+        fenetre_menu_scores.pack_forget()
+        bouton_fermer_menu_scores.pack_forget()
+        text_scores1.pack_forget()
+        text_scores2.pack_forget()
+        text_scores3.pack_forget()
+        text_scores4.pack_forget()
+        text_scores5.pack_forget()
+        text_scores6.pack_forget()
+        text_scores7.pack_forget()
+        text_scores8.pack_forget()
+        text_scores9.pack_forget()
+        text_scores10.pack_forget()
+
+        fenetre_menu_scores.destroy()
+
+        MenuJeu.creer_menu()
 
     @staticmethod
     def fermer_menu_difficulte():
@@ -302,7 +403,7 @@ class Jeu:
         :return:
         """
         global nb_colonnes, nb_lignes, cartes_jouees
-        global joueur_actuel, fini, peut_jouer, nb_coups, canvas, nombre_joueurs
+        global joueur_actuel, fini, peut_jouer, nb_coups, canvas, nombre_joueurs, texte
         if cartes[cartes_jouees[0] - 1] == cartes[cartes_jouees[1] - 1]:
             # enleve les cartes identiques. Le joueur actuel reste le même
             canvas.delete(cartes_jouees[0])
@@ -342,21 +443,7 @@ class Jeu:
             if nombre_joueurs == 1:
                 texte = 'Vous avez gagné en ' + str(nb_coups) + ' coups.\n'
 
-                with open('scores/score' + str(nb_colonnes) + '.txt', 'r') as file1:
-                    valeurs = [str(row[0]) + ',' + str(row[1]) for row in csv.reader(file1)]
-
-                top_cinq = sorted(valeurs, reverse=True, key=lambda v: int(v[0]))[:5]
-                print(top_cinq)
-                # Compare notre score avec les 5 meilleurs en prenant en compte la difficulté
-                rang = 0
-                if rang < 5:
-                    if nb_coups < int(top_cinq[0][rang]):
-                        rang += 1
-                    else:
-                        place = top_cinq[0][rang]
-                        texte += "            Vous êtes #" + str(place) + " !"
-
-                print(top_cinq)
+                Jeu.text_classement_joueur(nb_coups)
 
             # Cas du mode 2 joueurs
             else:
@@ -522,17 +609,47 @@ class Jeu:
         :param nom_joueur: string
         :return:
         """
-        global nb_colonnes
+        global nb_colonnes, rang, valeurs
 
-        with open('scores/score' + str(nb_colonnes) + '.txt', 'r') as file1:
-            valeurs = [row for row in csv.reader(file1)]
-
+        print(valeurs)
         ligne_a_inserer = [nb_coups, nom_joueur]
-        valeurs[4] = ligne_a_inserer
+        valeurs.insert(rang, ligne_a_inserer)
+        valeurs.__delitem__(5)
+
+        print(valeurs)
+
         file2 = open('scores/score' + str(nb_colonnes) + '.txt', 'w', newline='')
         ecrire = csv.writer(file2)
         ecrire.writerows(valeurs)
         file2.close()
+
+    @staticmethod
+    def text_classement_joueur(nb_coups):
+        """
+        Affiche le classement du joueur
+        :param nb_coups:
+        :return:
+        """
+        global texte, rang, valeurs
+
+        with open('scores/score' + str(nb_colonnes) + '.txt', 'r') as file1:
+            valeurs = [row for row in csv.reader(file1)]
+
+        # Compare notre score avec les 5 meilleurs en prenant en compte la difficulté
+        rang = 0
+
+        print(valeurs)
+        if rang < 5:
+            while nb_coups >= int(valeurs[rang][0]):
+                if nb_coups == int(valeurs[rang][0]):
+                    place = rang + 1
+                    texte += "       Vous êtes #" + str(place) + " ex aequo !"
+                    return
+                print(valeurs[rang][0])
+                rang += 1
+            place = rang + 1
+            texte += "            Vous êtes #" + str(place) + " !"
+
 
 fenetre = Fenetre()
 menu = MenuJeu()
