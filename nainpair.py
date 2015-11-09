@@ -611,12 +611,9 @@ class Jeu:
         """
         global nb_colonnes, rang, valeurs
 
-        print(valeurs)
         ligne_a_inserer = [nb_coups, nom_joueur]
         valeurs.insert(rang, ligne_a_inserer)
         valeurs.__delitem__(5)
-
-        print(valeurs)
 
         file2 = open('scores/score' + str(nb_colonnes) + '.txt', 'w', newline='')
         ecrire = csv.writer(file2)
@@ -638,14 +635,12 @@ class Jeu:
         # Compare notre score avec les 5 meilleurs en prenant en compte la difficulté
         rang = 0
 
-        print(valeurs)
         if rang < 5:
             while nb_coups >= int(valeurs[rang][0]):
                 if nb_coups == int(valeurs[rang][0]):
                     place = rang + 1
                     texte += "       Vous êtes #" + str(place) + " ex aequo !"
                     return
-                print(valeurs[rang][0])
                 rang += 1
             place = rang + 1
             texte += "            Vous êtes #" + str(place) + " !"
